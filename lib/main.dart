@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spiderweb_assignment/core/constant_colors.dart';
-import 'package:spiderweb_assignment/presentaion/page_productlist/screen_product.dart';
+import 'package:spiderweb_assignment/presentaion/navigation_bar/nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appThemeData,
-      home: const ScreenHome(),
+      home: NavBar(),
     );
   }
 }

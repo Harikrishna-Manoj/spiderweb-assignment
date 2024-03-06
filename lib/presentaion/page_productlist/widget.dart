@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spiderweb_assignment/core/constant.dart';
+import 'package:spiderweb_assignment/core/constant_colors.dart';
 import 'package:spiderweb_assignment/core/constant_fonts.dart';
 import 'dart:math';
 
@@ -23,7 +25,7 @@ class ProductGridView extends StatelessWidget {
         // mainAxisSpacing: 20,
         childAspectRatio: 0.8 / 1.2,
         children: List.generate(
-            10,
+            6,
             (index) => Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10),
                   child: Stack(
@@ -37,8 +39,9 @@ class ProductGridView extends StatelessWidget {
                           ));
                         },
                         child: BlurContainer(
+                          color: const Color.fromARGB(69, 255, 255, 255),
                           width: w * 0.6,
-                          height: h * 0.3,
+                          height: h * 0.31,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -51,17 +54,29 @@ class ProductGridView extends StatelessWidget {
                                     child: Hero(
                                       tag: "shoe$index",
                                       child: Image.asset(
-                                        "assets/images/shoes_1.png",
-                                        fit: BoxFit.cover,
+                                        productData[index]["image"],
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ),
                                 ),
+                                CircleAvatar(
+                                    radius: 16.5,
+                                    backgroundColor: buttonBlueColor,
+                                    child: IconButton(
+                                        tooltip: "Cart",
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.backpack,
+                                          color: Colors.white,
+                                          size: 16.5,
+                                        ))),
                               ]),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0, top: 5),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, top: 5),
                                 child: Text(
-                                  "Nike",
+                                  productData[index]["brandName"],
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
@@ -71,14 +86,14 @@ class ProductGridView extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.only(left: 8.0, top: 5),
                                 child: Text(
-                                  "Size : 7",
+                                  "Size : ${productData[index]["size"]}",
                                 ),
                               ),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 8.0, top: 5),
                                 child: Text(
-                                  'Rate : ₹2000',
+                                  'Rate : ₹${productData[index]["price"]}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
@@ -146,38 +161,20 @@ class PageBlurEffect extends CustomPainter {
 }
 
 class BlurContainer extends StatelessWidget {
-  /// The [child] will be shown over blurry container.
   final Widget child;
 
-  /// [height] of blurry container.
   final double? height;
 
-  /// [width] of blurry container.
   final double? width;
 
-  /// [elevation] of blurry container.
-  ///
-  /// Defaults to `0`.
   final double elevation;
 
-  /// The [blur] will control the amount of [sigmaX] and [sigmaY].
-  ///
-  /// Defaults to `5`.
   final double blur;
 
-  /// [padding] adds the [EdgeInsetsGeometry] to given [child].
-  ///
-  /// Defaults to `const EdgeInsets.all(8)`.
   final EdgeInsetsGeometry padding;
 
-  /// Background color of container.
-  ///
-  /// Defaults to `Colors.transparent`.
-  ///
-  /// The [color] you define will be shown at `0.5` opacity.
   final Color color;
 
-  /// [borderRadius] of blurry container.
   final BorderRadius borderRadius;
 
   const BlurContainer({
@@ -232,7 +229,10 @@ class BlurContainer extends StatelessWidget {
             height: height,
             width: width,
             padding: padding,
-            // color: color,
+            decoration: BoxDecoration(
+              border: Border.all(color: buttonBlueColor),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
             child: child,
           ),
         ),

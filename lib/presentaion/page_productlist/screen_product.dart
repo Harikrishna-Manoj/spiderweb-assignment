@@ -27,7 +27,7 @@ class ScreenHome extends StatelessWidget {
                     SliverAppBar(
                       automaticallyImplyLeading: false,
                       backgroundColor: Colors.transparent,
-                      expandedHeight: h * 0.1,
+                      expandedHeight: h * 0.09,
                       flexibleSpace: FlexibleSpaceBar(
                         background: ListView(
                           children: const [TitleWidget()],
@@ -42,7 +42,7 @@ class ScreenHome extends StatelessWidget {
                           SizedBox(
                             height: h * 0.1,
                           ),
-                          ProductGridView()
+                          const ProductGridView()
                         ],
                       ),
                     ]))
