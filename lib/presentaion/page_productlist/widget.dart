@@ -31,7 +31,9 @@ class ProductGridView extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ScreenPageDetails(),
+                            builder: (context) => ScreenPageDetails(
+                              index: index,
+                            ),
                           ));
                         },
                         child: BlurContainer(
@@ -47,7 +49,7 @@ class ProductGridView extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(15),
                                     child: Hero(
-                                      tag: Object(),
+                                      tag: "shoe$index",
                                       child: Image.asset(
                                         "assets/images/shoes_1.png",
                                         fit: BoxFit.cover,
