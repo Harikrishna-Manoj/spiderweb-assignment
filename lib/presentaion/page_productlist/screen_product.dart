@@ -42,7 +42,7 @@ class ScreenHome extends StatelessWidget {
                           SizedBox(
                             height: h * 0.1,
                           ),
-                          const ProductGridView()
+                          const ProductGridView(),
                         ],
                       ),
                     ]))

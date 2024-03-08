@@ -1,5 +1,11 @@
-String shoesDescription =
-    "Nike, Inc. is an American multinational association that is involved in the design, development, manufacturing and worldwide marketing and sales of apparel, footwear, accessories, equipment and services.";
+String cartBoxName = "cartproduct";
+List<String> sizeList = [
+  "7",
+  "8",
+  "9",
+  "10",
+];
+int choiceChipSizeValue = 0;
 List<Map<String, dynamic>> productData = [
   {
     "brandName": 'Nike',
@@ -35,24 +41,24 @@ List<Map<String, dynamic>> productData = [
         "Puma is a German sportswear company that designs and manufactures athletic and casual footwear, apparel, and accessories. It is the world's third largest sportswear brand",
     "price": 2499,
     "image": 'assets/images/shoe_4.png',
-    "size": 8
+    "size": "8"
   },
   {
     "brandName": 'Nike',
     "shoeName": 'Freak 2 SE',
     "description":
         "Nike, Inc. is an American multinational association that is involved in the design, development, manufacturing and worldwide marketing and sales of apparel, footwear, accessories, equipment and services.",
-    "price": '5999',
+    "price": 5999,
     "image": 'assets/images/shoe_5.png',
-    "size": 10
+    "size": "10"
   },
   {
     "brandName": 'Puma',
     "shoeName": 'Stayhom',
     "description":
         "Puma is a German sportswear company that designs and manufactures athletic and casual footwear, apparel, and accessories. It is the world's third largest sportswear brand",
-    "price": '4999',
+    "price": 4999,
     "image": 'assets/images/shoe_6.png',
-    "size": 8
+    "size": "8"
   },
 ];

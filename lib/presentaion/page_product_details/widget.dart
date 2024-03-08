@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spiderweb_assignment/application/cart_bloc/cart_bloc.dart';
+import 'package:spiderweb_assignment/application/deatil_bloc/detail_bloc.dart';
 import 'package:spiderweb_assignment/core/constant.dart';
 import 'package:spiderweb_assignment/core/constant_colors.dart';
 
 class ActionButtons extends StatelessWidget {
   const ActionButtons({
     super.key,
+    required this.index,
+    required this.productId,
   });
-
+  final int index;
+  final String productId;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -21,16 +27,34 @@ class ActionButtons extends StatelessWidget {
             )),
         Padding(
           padding: const EdgeInsets.only(right: 10.0),
-          child: CircleAvatar(
-              radius: 16.5,
-              backgroundColor: buttonBlueColor,
-              child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.backpack,
-                    color: Colors.white,
-                    size: 16.5,
-                  ))),
+          child: BlocBuilder<DetailBloc, DetailState>(
+            builder: (context, state) {
+              return CircleAvatar(
+                  radius: 16.5,
+                  backgroundColor: state is ProductAddedState
+                      ? buttonBlueColor
+                      : Colors.white,
+                  child: IconButton(
+                      onPressed: () {
+                        state is ProductAddedState
+                            ? context
+                                .read<CartBloc>()
+                                .add(DeleteProductEvent(id: productId))
+                            : context
+                                .read<DetailBloc>()
+                                .add(ProdctDataToCartEvent(index: index));
+                        BlocProvider.of<DetailBloc>(context)
+                            .add(CheckProductInCartEvent(shoeName: productId));
+                      },
+                      icon: Icon(
+                        Icons.backpack,
+                        color: state is ProductAddedState
+                            ? Colors.white
+                            : buttonBlueColor,
+                        size: 16.5,
+                      )));
+            },
+          ),
         )
       ],
     );
@@ -120,6 +144,7 @@ class TitlePriceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           productData[index]["brandName"],
@@ -207,7 +232,10 @@ class StackedImgeAndTileWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const ActionButtons()
+              ActionButtons(
+                index: index,
+                productId: productData[index]["shoeName"],
+              )
             ],
           ),
           Positioned(

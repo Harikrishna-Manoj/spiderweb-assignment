@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spiderweb_assignment/application/cart_bloc/cart_bloc.dart';
+import 'package:spiderweb_assignment/application/home_bloc/home_bloc.dart';
+
 import 'package:spiderweb_assignment/core/constant.dart';
 import 'package:spiderweb_assignment/core/constant_colors.dart';
 import 'package:spiderweb_assignment/core/constant_fonts.dart';
+import 'package:spiderweb_assignment/domain/home_page/all_product_service.dart';
 import 'dart:math';
 
 import 'dart:ui' show ImageFilter;
@@ -17,16 +23,15 @@ class ProductGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    return GridView.count(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        clipBehavior: Clip.none,
-        crossAxisCount: 2,
-        // mainAxisSpacing: 20,
-        childAspectRatio: 0.8 / 1.2,
-        children: List.generate(
-            6,
-            (index) => Padding(
+    return BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) => GridView.count(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              clipBehavior: Clip.none,
+              crossAxisCount: 2,
+              childAspectRatio: 0.8 / 1.2,
+              children: List.generate(productData.length, (index) {
+                return Padding(
                   padding: const EdgeInsets.only(right: 10, left: 10),
                   child: Stack(
                     children: [
@@ -34,6 +39,7 @@ class ProductGridView extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ScreenPageDetails(
+                              productId: productData[index]["shoeName"],
                               index: index,
                             ),
                           ));
@@ -60,17 +66,42 @@ class ProductGridView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                CircleAvatar(
-                                    radius: 16.5,
-                                    backgroundColor: buttonBlueColor,
-                                    child: IconButton(
-                                        tooltip: "Cart",
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.backpack,
-                                          color: Colors.white,
-                                          size: 16.5,
-                                        ))),
+                                InkWell(
+                                  onTap: () async {
+                                    print(index);
+                                    HomePageService.checkProductExistance(
+                                            productData[index]["shoeName"])
+                                        ? context.read<CartBloc>().add(
+                                            DeleteProductEvent(
+                                                id: productData[index]
+                                                    ["shoeName"]))
+                                        : context.read<HomeBloc>().add(
+                                            ProdctDataToCartEvent(
+                                                index: index));
+                                    BlocProvider.of<HomeBloc>(context).add(
+                                        CheckProductInCartEvent(
+                                            shoeName: productData[index]
+                                                ["shoeName"]));
+                                  },
+                                  child: CircleAvatar(
+                                      radius: 16.5,
+                                      backgroundColor:
+                                          HomePageService.checkProductExistance(
+                                                  productData[index]
+                                                      ["shoeName"])
+                                              ? buttonBlueColor
+                                              : Colors.white,
+                                      child: Icon(
+                                        Icons.backpack,
+                                        color: HomePageService
+                                                .checkProductExistance(
+                                                    productData[index]
+                                                        ["shoeName"])
+                                            ? Colors.white
+                                            : buttonBlueColor,
+                                        size: 16.5,
+                                      )),
+                                )
                               ]),
                               Padding(
                                 padding:
@@ -105,7 +136,9 @@ class ProductGridView extends StatelessWidget {
                       ),
                     ],
                   ),
-                )));
+                );
+              }),
+            ));
   }
 }
 

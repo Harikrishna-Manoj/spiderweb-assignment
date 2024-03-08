@@ -1,86 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:spiderweb_assignment/presentaion/page_product_details/screen_product_detail.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spiderweb_assignment/application/cart_bloc/cart_bloc.dart';
 import 'package:spiderweb_assignment/presentaion/page_productlist/widget.dart';
-
-class ProductCard extends StatelessWidget {
-  const ProductCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.sizeOf(context);
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 5,
-      child: Container(
-          width: size.width,
-          height: size.height * 0.13,
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(15)),
-          child: Row(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 4, right: 15),
-                height: size.height * 0.12,
-                width: size.width * .23,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(13)),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Roller Rabit',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const Text('Roller Rabit'),
-                  const Text(
-                    '300',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
-          )),
-    );
-  }
-}
 
 // ignore: must_be_immutable
 class SlideAction extends StatelessWidget {
-  SlideAction(
-      {super.key,
-      required this.name,
-      required this.productSize,
-      required this.price,
-      required this.image,
-      required this.id,
-      required this.index,
-      this.cartPageRebuildNotifer});
-  final String name;
+  const SlideAction({
+    super.key,
+    required this.brandName,
+    required this.count,
+    required this.shoeName,
+    required this.productSize,
+    required this.price,
+    required this.image,
+    required this.id,
+    required this.index,
+  });
+  final String brandName;
+  final String shoeName;
+  final int count;
+
   final String productSize;
-  final String price;
+  final int price;
   final String image;
   final String id;
   final String index;
-  ValueNotifier<bool>? cartPageRebuildNotifer;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
 
     return Dismissible(
       key: Key(index),
-      background: BlurContainer(
-        color: const Color.fromARGB(69, 255, 255, 255),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: const Icon(
+      background: const BlurContainer(
+        color: Color.fromARGB(69, 255, 255, 255),
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Icon(
           Icons.delete,
           color: Colors.red,
         ),
@@ -104,7 +58,11 @@ class SlideAction extends StatelessWidget {
                         child: const Text("No",
                             style: TextStyle(fontWeight: FontWeight.bold))),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          BlocProvider.of<CartBloc>(context)
+                              .add(DeleteProductEvent(id: id));
+                          Navigator.pop(context);
+                        },
                         child: const Text(
                           "Yes",
                           style: TextStyle(
@@ -119,11 +77,11 @@ class SlideAction extends StatelessWidget {
       },
       child: InkWell(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ScreenPageDetails(),
-              ));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => const ScreenPageDetails(),
+          //     ));
         },
         child: BlurContainer(
             color: const Color.fromARGB(69, 255, 255, 255),
@@ -156,13 +114,13 @@ class SlideAction extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              name,
+                              "$brandName $shoeName",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   "₹ ",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -170,8 +128,8 @@ class SlideAction extends StatelessWidget {
                                       color: Colors.red),
                                 ),
                                 Text(
-                                  price,
-                                  style: TextStyle(
+                                  "$price",
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
                                 ),
@@ -185,21 +143,34 @@ class SlideAction extends StatelessWidget {
                         children: [
                           IconButton(
                               padding: const EdgeInsets.only(bottom: 15),
-                              onPressed: () {},
+                              onPressed: () {
+                                BlocProvider.of<CartBloc>(context).add(
+                                    UpdateProductCount(
+                                        count: count,
+                                        id: id,
+                                        isIncrement: false));
+                              },
                               icon: const Icon(
                                 Icons.minimize,
                               )),
                           Text(
-                            '2',
+                            count.toString(),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           IconButton(
-                              onPressed: () {}, icon: const Icon(Icons.add)),
-                          Text("||   "),
+                              onPressed: () {
+                                BlocProvider.of<CartBloc>(context).add(
+                                    UpdateProductCount(
+                                        count: count,
+                                        id: id,
+                                        isIncrement: true));
+                              },
+                              icon: const Icon(Icons.add)),
+                          const Text("||   "),
                           Text(
-                            'Size 8',
+                            'Size $productSize',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
